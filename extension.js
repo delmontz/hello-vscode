@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const request = require("request");
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -9,37 +10,32 @@ const vscode = require('vscode');
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
+  //任意のコマンドID
+  const cmd_id = 'slack_cmd';
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "hello-vscode" is now active!');
+  //コマンドの登録
+  // 第一引数:コマンドID 第二引数:コールバック
+  const cmd = vscode.commands.registerCommand(cmd_id, () => {
+    request.post({
+      uri: 'https://hooks.slack.com/services/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',
+      headers: { 'Content-Type': 'application/json' },
+      json: {
+        username: 'VSCode',
+        icon_emoji: ':ghost:',
+        text: '万策尽きた😇'
+      }
+    });
+  });
+  context.subscriptions.push(cmd);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	//第一引数:任意のコマンドID
-	let hello_id = 'hello';
-	let hello_command = vscode.commands.registerCommand(hello_id, function () {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('ハローVSCode');
-	});
-
-	context.subscriptions.push(hello_command);
-
-	// ステータバー追加
-	// 
-	// 第一引数：表示位置 第二引数:優先度
-	mybar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	mybar.command = 'hello';
-	context.subscriptions.push(mybar);
-	update();
-}
-
-var mybar;
-function update(){
-	mybar.text = 'hogehoge';
-	mybar.show();
+  // ステータバーにボタン登録
+  // 第一引数:表示位置 第二引数:優先度
+  let button = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+  button.command = cmd_id;
+  button.text = '開くボタン';
+  context.subscriptions.push(button);
+  //登録しただけだと表示されないので明示的に表示させる
+  button.show();
 }
 
 exports.activate = activate;
