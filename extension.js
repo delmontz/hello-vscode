@@ -11,7 +11,7 @@ function activate(context) {
     vscode.window.showQuickPick(['自分で入力', 'ファイル内容送信', '選択部分を送信']).then((selected) => {
       //アクティブなエディタのドキュメントを取得
       const activeEditor = vscode.window.activeTextEditor;
-      const doc = activeEditor && activeEditor.document && activeEditor.document.uri && activeEditor.document;
+      const doc = activeEditor && activeEditor.document;
       if(selected === '自分で入力'){
         //入力欄を表示させる
         vscode.window.showInputBox({
