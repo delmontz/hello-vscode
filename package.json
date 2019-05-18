@@ -14,10 +14,6 @@
 	],
 	"main": "./extension.js",
 	"contributes": {
-		"commands": [{
-            "command": "hello",
-			"title": "Hello World"
-		}]
 	},
 	"scripts": {
 		"postinstall": "node ./node_modules/vscode/bin/install",
